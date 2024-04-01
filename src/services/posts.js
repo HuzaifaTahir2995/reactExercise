@@ -1,41 +1,81 @@
 import { posts as data } from "../data/posts";
+import { generateId } from "../utils";
 
-//private
+// Private variable to store posts
 let posts = [...data];
 
-function getPosts() {
-  //get all posts
+export function getPosts() {
+  // Return all posts
+  return [...posts];
 }
 
-function getPostsByUser(userId) {
-  //get all posts by userId
+export function getPostsByUser(userId) {
+  return posts.filter(post => post.userId === userId);
 }
 
-function getPostById(id) {
-  //get a single post by id
+export function getPostById(id) {
+  return posts.find(post => post.id === id);
 }
 
-function addPost(post) {
-  //add new post to BEGINNING of posts array
-  // use generateId function and pass posts array as the argument to generate a unique id.
+export function addPost(post) {
+  const newPostId = generateId(posts);
+  const newPost = { id: newPostId, ...post };
+  posts.push(newPost);
+  return newPost;
 }
 
-function updatePostTitle(id, title) {
-  //update post title
+export function updatePostTitle(id, title) {
+  posts = posts.map((post) =>{
+    if (post.id === id) {
+      return{
+        ...post,
+      title
+    };
+   }
+   return post; 
+  });
+  return getPostById(id); 
 }
 
-function updatePostBody(id, body) {
-  //update post body
+export function updatePostBody(id, body) {
+  posts = posts.map((post) =>{
+    if (post.id === id) {
+      return{
+        ...post,
+      body
+    };
+   }
+   return post; 
+  });
+  return getPostById(id); 
 }
 
-function updatePost(id, post) {
-  //update post title and or body (imagine a form where user is allowed to edit both title and post but may also choose to only edit one of them)
+export function updatePost(id, updatedPosts) {
+  posts = posts.map((post) => {
+    if (post.id === id) {
+      // If updatedPosts has title, update the title
+      if (updatedPosts.title) {
+        post.title = updatedPosts.title;
+      }
+      
+      // If updatedPosts has body, update the body
+      if (updatedPosts.body) {
+        post.body = updatedPosts.body;
+      }
+    }
+    return post;
+  });
+  
+  // Return the updated post
+  return getPostById(id);
 }
 
-function deletePostBy(id) {
-  //delete post by id
+export function deletePostById(id) {
+  posts = posts.filter((post) => post !== id);
+  return `Post with Id:${getPostById(id).id} and Title: ${getPostById(id).title}   has been deleted`
 }
 
-function deletePostsByUserId(userId) {
-  //delete all posts of a user by given userId
+export function deletePostsByUserId(userId) {
+  posts = posts.filter(post => post.userId !== userId);
+  return `Post with UserId:${getPostById(userId).id} and Title: ${getPostById(userId).title}   has been deleted`
 }

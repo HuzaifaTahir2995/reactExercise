@@ -1,4 +1,5 @@
 import { users as data } from "../data/users";
+import { generateId } from "../utils";
 
 //private
 let users = [...data];
@@ -8,7 +9,7 @@ export function getAllUsers() {
   return [...users];
 }
 
-function getUserById(id) {
+export function getUserById(id) {
   //get single user by id
   return users.find((user) => user.id === id);
 }
@@ -27,7 +28,10 @@ export function updateUser(id, userInfo) {
   });
 }
 
-function addUser(userInfo) {
-  // add user (userInfo is an object which can optionally contain properties of a user)
-  // use generateId function and pass users array as the argument to generate a unique id.
+export function addUser(userInfo) {
+  // Add user
+  const newUserId = generateId(users);
+  const newUser = { id: newUserId, ...userInfo };
+  users.push(newUser);
+  return newUser;
 }

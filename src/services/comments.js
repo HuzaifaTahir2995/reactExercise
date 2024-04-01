@@ -1,25 +1,44 @@
 import { comments as data } from "../data/comments";
+import { generateId } from "../utils";
 
-//private
+// Private variable to store comments
 let comments = [...data];
 
-function getCommentById(id) {
-  //get comment by id
+// Function to get a comment by its ID
+export function getCommentById(id) {
+  return comments.find(comment => comment.id === id);
 }
 
-function getCommentsByPostId(postId) {
-  //get comments by post id
+// Function to get comments by post ID
+export function getCommentsByPostId(postId) {
+  return comments.filter(comment => comment.postId === postId);
 }
 
-function updateCommentBody(id, body) {
-  //update comment body
+// Function to update comment body
+export function updateCommentBody(id, body) {
+  // Assuming comments is a global variable or defined elsewhere in your code
+  comments = comments.map((comment) => {
+    if (comment.id === id) {
+      return {
+        ...comment,
+        body
+      };
+    }
+    return comment;
+  });
+  return getCommentById(id);
 }
 
-function deleteCommentById(id) {
-  //delete comment by id
+// Function to delete comment by ID
+export function deleteCommentById(id) {
+  comments = comments.filter((comment) => comment !== id);
+  return `Comment: " ${getCommentById(id).body} "  has been deleted`
 }
 
-function addComment(comment) {
-  //add comment to comments array
-  // use generateId function and pass comments array as the argument to generate a unique id.
+// Function to add a new comment
+export function addComment(comment) {
+  const newCommentId = generateId(comments);
+  const newComment = { id: newCommentId, ...comment };
+  comments.push(newComment);
+  return newComment;
 }
